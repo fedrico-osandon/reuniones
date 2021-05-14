@@ -8,7 +8,7 @@ const ItemDetailContainer =() =>{
 
     const [data, setData]=useState([])
 
-    const [data, setData]=useState([])
+    
     const {idReunion = undefined} = useParams()
 
     useEffect(() => {
