@@ -5,6 +5,7 @@ import './Card.css'
 const ItemList = ({data}) => {
 
     console.log('itemList data', data)
+    
 
     return (        
         <Row className="ml-3">
