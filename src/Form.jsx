@@ -21,7 +21,7 @@ const Formulario = () =>  {
        console.log('enviar')
 
         const db = getFirestore()
-        db.collection('personas').add({...formData, idreunion:id, fecha: firebase.firestore.Timestamp.fromDate(new Date())}).then(res=> setFormData(formData))
+        db.collection('personas').add({...formData, idreunion:id, fecha: firebase.firestore.Timestamp.fromDate(new Date(formData.fecha))}).then(res=> setFormData(formData))
      }
     return(
 

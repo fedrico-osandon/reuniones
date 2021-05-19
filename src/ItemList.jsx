@@ -9,7 +9,7 @@ const ItemList = ({data}) => {
 
     return (        
         <Row className="ml-3">
-            {data.map(dato => <Card key={dato.id} datos={dato} />)}
+            {data.map(dato => <Card key={dato.id} datos={dato}/>)}
         </Row>
     )
 }

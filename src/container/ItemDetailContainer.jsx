@@ -2,12 +2,13 @@ import {useState, useEffect} from 'react'
 //import getItem from '../GetItem'
 import ItemList from '../ItemList'
 import {getFirestore} from '../firebase'
-import { useParams } from 'react-router-dom'
+//import { useParams } from 'react-router-dom'
 
 const ItemDetailContainer =() =>{
 
 
     const [data, setData]=useState([])
+    const [loading, setLoading] = useState(true)
     //const {id } = useParams()
 
 
@@ -18,11 +19,11 @@ const ItemDetailContainer =() =>{
 
         query.then((respuesta) => {
             setData(respuesta.docs.map((doc)=> 
-                [({...doc.data(), id: doc.id})]
-                ))
-                
-            })
-            console.log('setdata', data)
+                ({...doc.data(), id: doc.id})
+            ))
+            setLoading(false)    
+        })
+  
         // const query = idReunion ? reunionesCollection.where('idReunion', '==', idReunion) : reunionesCollection
 
         // query.get().then((querySnap) => {
@@ -31,10 +32,10 @@ const ItemDetailContainer =() =>{
         //     }
 
         //     setData(querySnap.docs.map( doc => ({...doc.data(), id: doc.id})));
-        }, [data.id])
-console.log('data', data)
+        },[])
+//
     return(
-        <ItemList data={data}/>
+        loading ? <h2>Cargando...</h2>: <ItemList data={data}/>        
     )
 }
 
