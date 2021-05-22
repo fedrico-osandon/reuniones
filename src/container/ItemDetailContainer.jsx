@@ -19,20 +19,21 @@ const ItemDetailContainer =() =>{
 
         query.then((respuesta) => {
             setData(respuesta.docs.map((doc)=> 
-                ({...doc.data(), id: doc.id})
+                ({...doc.data(), id: doc.id,fecha: doc.data().fecha.toDate().toISOString()})
             ))
             setLoading(false)    
         })
-  
+        
         // const query = idReunion ? reunionesCollection.where('idReunion', '==', idReunion) : reunionesCollection
-
+        
         // query.get().then((querySnap) => {
-        //     if(querySnap.size === 0){
+            //     if(querySnap.size === 0){
         //         console.log("no existen reuniones disponibles");
         //     }
 
         //     setData(querySnap.docs.map( doc => ({...doc.data(), id: doc.id})));
-        },[])
+    },[])
+    console.log('data con hora: ', data)
 //
     return(
         loading ? <h2>Cargando...</h2>: <ItemList data={data}/>        
