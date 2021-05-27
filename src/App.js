@@ -3,8 +3,11 @@ import ItemDetailContainer from './container/ItemDetailContainer'
 import {BrowserRouter, Switch, Route} from 'react-router-dom'
 import NavBar from './Navbar'
 import Formulario from './Form'
+
+
 function App() {
   return (
+    
     <BrowserRouter>
       
       <NavBar/>
@@ -24,7 +27,7 @@ function App() {
       </Switch>  
     
     </BrowserRouter>   
-        
+    
     
   );
 }

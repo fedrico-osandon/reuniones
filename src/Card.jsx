@@ -5,25 +5,26 @@ import {Link} from 'react-router-dom'
 
 const Cards = ({datos}) => {
     
-    console.log('info Card', datos)
-    console.log('cantidad: ', datos.title)
+    
     return(
         <Card className="card">
-            <Card.Header className="card-header">{datos.fecha}</Card.Header>
+            <p className="header">Fecha: {datos.fecha.slice(0, 10)}{datos.cantidadPersonas<1 && ' No Hay Lugar'}</p>
             <Card.Body className="card-body">
-            <Card.Title>{datos.titulo}</Card.Title>
-                <Card.Title>{datos.hora}</Card.Title>
-                <Card.Text>
-                Cupos {datos.cupo}
-                </Card.Text>
-                <Card.Text>
-                Cantidad de Personas {datos.cantidadPersonas}
-                </Card.Text>
-                
+            <Card.Title>{datos.nombre}</Card.Title>
+                <Card.Text className="info">Fecha: {datos.fecha.slice(0, 10)}{datos.cantidadPersonas<1 && ' No Hay Lugar'} </Card.Text>
+                <Card.Text className="info">
+                    Disponibilidad de lugares {datos.cantidadPersonas>0 
+                                        ? datos.cantidadPersonas 
+                                        : <label className="alert alert-danger">No hay lugar</label>
+                                      }
+                </Card.Text>               
             </Card.Body>
-            <Link to={`/reuniones/${datos.id}`}>
-                <Card.Footer className="card-footer">anotarse</Card.Footer>
-            </Link>
+            {datos.cantidadPersonas>0 && 
+                <Link to={`/reuniones/${datos.id}`} className="footer">
+                    <p className="inscripcion">Anotarse</p>
+                </Link>
+            }
+            
         </Card>
     )
 }
