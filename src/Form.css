@@ -1,0 +1,20 @@
+*{
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+}
+.container{
+    margin-right: 10px;
+    margin-left: 9%;
+}
+.formulario{
+    width: 50%;
+    margin-left: 25%;
+}
+
+@media(max-width: 437px){
+    .formulario{
+        width: 80%;
+        margin-left: 10%;
+    }
+}

@@ -9,15 +9,9 @@ function App() {
   return (
     
     <BrowserRouter>
-      
-      <NavBar/>
-
       <Switch>
-      
-        <Route path="/" exact >
-        </Route>
-
-        <Route path="/reuniones" exact>
+        
+        <Route path="/" exact>
           <ItemDetailContainer />  
         </Route>
 

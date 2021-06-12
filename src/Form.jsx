@@ -1,16 +1,22 @@
 import {useState, useEffect} from 'react'
 import {useParams} from 'react-router-dom'
-import {Container, Form, Button, NavLink} from 'react-bootstrap'
+import {Spinner, Form, Button, NavLink, Alert, Modal} from 'react-bootstrap'
 import { getFirestore } from './firebase'
 import firebase from 'firebase/app'
 import NavBar from './Navbar'
+import './Form.css'
 
 const Formulario = () =>  {
 
     const [formData, setFormData]= useState(initialValueForm)
-    const {id} = useParams()
-    const [vacantes, setVacantes] = useState()
+    //const [cantPersonas, setCantPersonas] = useState()
     const [loading, setLoading] = useState(true)
+    const [loadingForm, setLoadingForm] = useState(true)
+    const [vacantes, setVacantes] = useState(true)
+    const {id} = useParams()
+    console.log(id);
+    const db = getFirestore()
+    const queryReuniones = db.collection('reuniones').doc(id)
 
     const handlerChange= (e) =>  {
         setFormData({
@@ -19,79 +25,70 @@ const Formulario = () =>  {
         })
 
     }
+
+    
+
+    //queryReuniones.doc(id)
                 //*************************************
     // hago la llamada a la base de datos para verificar vacantes
                 //*************************************
 
     useEffect(() => {
         
-        const db = getFirestore()
-        const queryReuniones = db.collection('reuniones')
-
-
-        queryReuniones.doc(id)               
+     queryReuniones               
         .get()
         .then(res => {
-            console.log(res.data().cantidadPersonas);
-        
-            setVacantes(res.data().cantidadPersonas)
+            if(res.data().cantidadPersonas == 0 ){
+                setVacantes(false)
+            }
+            
             setLoading(false)    
-
-        
+            
         })
         
-    }, [])
+    })
 
     
     const handlerSubmit = (e) => {
-       e.preventDefault()
-       
-        const db = getFirestore()
-
-        const queryReuniones= db.collection('reuniones')
-        
-        queryReuniones.doc(id)               
+        e.preventDefault()
+        setLoadingForm(false)
+        queryReuniones             
         .get()
-        .then(res => {
-            console.log(res.data().cantidadPersonas);
+        .then(res => {    
             const cantPersonas = (res.data().cantidadPersonas) 
-            setVacantes =  (res.data().cantidadPersonas) 
-
-
-            if (cantPersonas > 0) {                
-                queryReuniones.doc(id).update({
-                cantidadPersonas: cantPersonas-1
+            setLoadingForm(true)
+            if (cantPersonas >= 1) { 
+                queryReuniones.update({
+                    cantidadPersonas: cantPersonas-1                  
                 })            
                 db.collection('personas')
                 .add({...formData, idreunion:id, fechaCreacion: firebase.firestore.Timestamp.fromDate(new Date())})
                 .then(res=> {
                     setFormData(initialValueForm)
-                })
-                alert('Se a agregado exitósamente')
-
-                if (vacantes == 0 ){
-                    <h1>hola </h1>
-                }
+                }).catch(err => console.log(err))
+                
             }else{
-                alert('Plantilla completa, lo sentimos')
-
+                setVacantes(false)
             }
+            
             
         })
     }
+
     
-    console.log('cantidad de vacantes',vacantes)
+    if(loading){
+        return <h1>cargando</h1>
+    }
     return(
         <>
         <NavBar /> 
-        {loading ? <h1> .... espere un momento por favor</h1> 
-        
-             : 
-    
+        {
+            //loading  ? <h1>...Cargando</h1> :
             
-            <Container className="w-50 mt-5" >
+            vacantes ? 
+            <>
+            <Form onChange={handlerChange} onSubmit={handlerSubmit} className="mt-5 formulario">
             <h1 className="text-center">COMPLETE EL FORMULARIO</h1>
-            <Form onChange={handlerChange} onSubmit={handlerSubmit} className="mt-5">
                 <Form.Control
                     className="mt-3" 
                     name="nombre" 
@@ -119,10 +116,24 @@ const Formulario = () =>  {
                     placeholder="Telefono" 
                     value={formData.tel}
                 />
+                { loadingForm ? 
+                <button className="btn btn-primary btn-lg btn-block mt-3 boton-submit" type="submit" >
+                    Enviar
+                </button> :
+                <Spinner animation="border" variant="success" /> 
                 
-                <button className="btn btn-primary btn-lg btn-block mt-3 boton-submit" type="submit" >Enviar</button>
+                }
+                
+                
             </Form>                
-        </Container>}
+        </>
+        
+             : 
+             <div><Alert className="mt-4" variant="danger"  >
+             Esta Reunión ya no cuenta con disponibilidad!!!
+            </Alert></div>
+            
+           }
             
         
        
